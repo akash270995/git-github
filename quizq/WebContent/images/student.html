@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+
+<title>RegistrationStudent</title>
+</head>
+<form align="center"action="InsertDatabase" method="post">
+<h3 style="color:#F00">Personal Details</h3>
+<h2>Student Registration Page</h2>
+<center><p>
+
+Student Id:
+<input type="text" name="student_id" placeholder="Enter Student ID" ><br><br></center></p>
+<center><p>
+Name:
+<input type="text" name="name" placeholder="Enter Student's Name" ><br><br></center></p>
+<center><p>
+Institute:
+<input type="text" name="institute" placeholder="Enter Institute's Name" ><br><br></center></p>
+
+<center><p>
+E-mail id: 
+<input type="email." name="email" placeholder="E-mail"><br><br></center></p>
+
+<center><p>
+Gender: 
+<input type="radio" name="gender" value="radio" > Male
+<input type="radio" name="gender" value="radio" > Female<br><br></center></p>
+
+<center><p>
+Contact Number:
+<input type="text" name="contact_num"onkeypress="return isNumberKey(event)" placeholder="contact number" maxlength="10"/><br>
+<br></center></p>
+
+<form class="pure-form" >
+
+   <center><p>
+        password:
+		<input type="password"name="password" placeholder="Password" id="password" required><br><br></center></p>
+		<center><p>
+		retype-password:
+        <input type="password" placeholder="Confirm Password" id="confirm_password" required><br>
+		<br></center></p>
+		
+		<center><p><button type="submit" class="pure-button pure-button-primary" value="submit">submit</button></center></p>
+		
+		
+        
+    
+</form>
+
+<script>
+var password = document.getElementById("password")
+  , confirm_password = document.getElementById("confirm_password");
+
+function validatePassword(){
+  if(password.value != confirm_password.value) {
+    confirm_password.setCustomValidity("Passwords Don't Match");
+  } else {
+    confirm_password.setCustomValidity('');
+  }
+}
+
+password.onchange = validatePassword;
+confirm_password.onkeyup = validatePassword;
+
+function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+        return false;
+    return true;
+}
+</script>
+
+
+
+
+
+ 
+
+</form>
+</body>
+</html>
