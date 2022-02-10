@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>EmployeeeRegistration</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="styleregistration.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+<style type="text/css">
+  body
+{
+  background-image: url(images/registrationForm.jpg);
+  background-size: cover;
+}
+
+
+</style>
+</head>
+
+
+<body>
+	<div class="container">
+		<form name="myForm" class="form-group" action="register_emp" method="post">
+			<h2 style="text-align: center; font-weight: bold; font-size: 30px;">Create Your Account</h2>
+			
+			<div class="row jumbotron" style="background-image: url(images/jumbotronColor.jpg); background-size: cover;!important">
+				<div class="col-md-12">
+				<label for="inputname"><b>Employee ID<sup style="color:red;">*</sup></b></label>
+				<input type="text" class="form-control" placeholder="Employee ID" name="prof_id" required>
+			</div>
+			<br>
+			<br>
+			<br>
+				
+			<div class="col-sm-6">
+				<label for="inputname"><b>First Name<sup style="color:red;">*</sup></b></label>
+				<input type="text" class="form-control" placeholder="First Name" name="fname" required>
+			</div>
+
+			<div class="col-sm-6">
+				<label for="inputname"><b>Last Name<sup style="color:red;">*</sup></b></label>
+				<input type="text" class="form-control" placeholder="Last Name" name="lname" required>
+			</div>
+			<br>
+			<br>
+			<br>
+			<div class="col-sm-6">
+				<label for="inputname"><b>Institute<sup style="color:red;">*</sup></b></label>
+				<input type="text" class="form-control" placeholder="Institute" name="institute" required>
+			</div>
+			<div class="col-sm-6">
+				<label for="inputname"><b>E-MAil ID<sup style="color:red;">*</sup></b></label>
+				<input type="text" class="form-control" placeholder="Email ID" name="email" required>
+			</div>
+
+			<br>
+			<br>
+			<br>
+			<div class="col-sm-6">
+				<label for="inputname" required><b>Gender<sup style="color:red;">*</sup></b></label>
+				<input type="radio" name="gender" value="Male" checked> <b>Male </b>
+				<input type="radio" name="gender" value="Female" > <b>Female</b>
+			</div>
+
+			<div class="col-sm-6">
+				<label for="inputname"><b>Contact Number<sup style="color:red;">*</sup></b></label>
+				<input type="text" class="form-control" onkeypress="return isNumberKey(event)" placeholder="Contact number" name="contact_num" maxlength="10"  required>
+			</div>
+				<br>
+			<br>
+		
+			
+			<div class="col-sm-6"><b>Security Question</b>
+  	 <select class="form-control" name="securityques" required >
+      <option value="0">Select a question from the following options.</option>
+      <option value="1">What's your father's middle name?</option>
+      <option value="2">What is your favorite color?</option>
+      <option value="3">What is your mother's favorite color?</option>
+      <option value="4">What brand of food did your first pet eat?</option>
+	  <option value="5">What's your favourite pet?</option>
+   </select></div>
+   <div class="col-sm-6"><b>Answer:<sup style="color:red;">*</sup></b> <input type="text" class="form-control" name="securityans" placeholder="Enter Answer" required >
+</div>
+<br>
+			<br>
+			<br>
+		
+
+<div class="col-sm-6">
+				<label for="inputname"><b>Password<sup style="color:red;">*</sup></b></label>
+				<input type="text" class="form-control" placeholder="Password" name="psw" id="password" required>
+			</div>
+
+			<div class="col-sm-6">
+				<label for="inputname"><b>Confirm Password<sup style="color:red;">*</sup></b></label>
+				<input type="text" class="form-control" placeholder="Re-enter Password" name="cpsw" id="confirm_password" required>
+			</div>
+		</form>
+<div class="col-sm-12 " style="text-align: center; margin-top: 20px;">
+<button type="submit" class="btn btn-primary">Submit</button>
+</div>
+
+<div class="col-sm-12 " style="text-align: center; margin-top: 10px;">
+<button type="submit" class="btn btn-danger">Reset</button>
+</div>
+
+<div class="col-sm-12 " style="text-align: center;>
+ <span class="psw"><a href="index.html">Already Have an Account?</a></span>
+</div>
+</div>
+
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+
+<script type="text/javascript">
+
+var password = document.getElementById("password")
+  , confirm_password = document.getElementById("confirm_password");
+
+function validatePassword(){
+  if(password.value != confirm_password.value) {
+    confirm_password.setCustomValidity("Passwords Don't Match");
+  } else {
+    confirm_password.setCustomValidity('');
+  }
+}
+
+password.onchange = validatePassword;
+confirm_password.onkeyup = validatePassword;
+
+
+	
+	function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+        return false;
+    return true;
+}
+</script>
+</html>

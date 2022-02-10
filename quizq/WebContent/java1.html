@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Dynamic Quiz Project</title>
+		
+	</head>
+	<body>
+		<div id='container'>
+			<div id='title'>
+				<h1>JAVA</h1>
+		
+		
+		
+    <div>Timer ends in  <span id="time">05:00</span> minutes!
+    
+    
+    
+    </div>
+    
+
+		
+		
+			</div>
+   			<br/>
+  			<div id='quiz'></div>
+    		<div class='button' id='next'><a href='#'>Next</a></div>
+    		<div class='button' id='prev'><a href='#'>Prev</a></div>
+    		
+    		<!-- <div class='button' id='end' > <a href='#'>Submit</a></div>-->
+    		
+    		
+    	<!-- <button onclick="location.href = 'https://www.youtube.com';" id="myButton" class="float-left submit-button" >SUBMIT</button> -->
+    		
+    <form action="table2.html">
+    <input type="submit" value="END TEST" />
+</form>
+    		
+    		
+    		<style> 
+input[type=button], input[type=submit], input[type=reset] {
+  background-color: #4CBF50;
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+</style>
+    		
+    		
+    		
+    		<!-- <button class='' id='next'>Next</a></button>
+    		<button class='' id='prev'>Prev</a></button>
+    		<button class='' id='start'> Start Over</a></button> -->
+    	</div>
+
+		<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js'></script>
+		<script type="text/javascript" src='questions.json'></script>
+	
+		
+	
+		
+	
+
+
+	</body>
+</html>
+
+<script>
+(function() {
+  var questions = [{
+    question: "Which of these operators is used to allocate memory for an object?",
+    choices: ["malloc", "alloc", "new", "give"],
+    correctAnswer: 2
+  }, {
+    question: "Which of these statement is incorrect?",
+    choices: ["Every class must contain a main() method", "Applets do not require a main() method at all", "There can be only one main() method in a program", "main() method must be made public"],
+    correctAnswer: 3
+  }, {
+    question: "Which of the following statements is correct?",
+    choices: [ "Public method is accessible to all other classes in the hierarchy", " Public method is accessible only to subclasses of its parent class", "Public method can only be called by object of its class", "Public method can be accessed by calling object of the public class"],
+    correctAnswer: 0
+  }, {
+    question: "Which of the following is a method having same name as that of it’s class?",
+    choices: ["finalize", "delete", "class", "constructor"],
+    correctAnswer: 3
+  }, {
+    question: "Which method can be defined only once in a program?",
+    choices: ["main method", "finalize method", "static method", "private method"],
+    correctAnswer: 0
+  }, {
+	    question: "Which of the following is a member of the java.lang package?",
+	    choices: [ "List", " Queue", "Math", "Stack"],
+	    correctAnswer: 1
+  }, {
+	    question: "Which of these field declarations are legal within the body of an interface?",
+	    choices: [ "Private final static int answer = 42", "public static int answer=42", "final static answer =42", "int answer"],
+	    correctAnswer: 1 
+  }, {
+	    question: "In Java, declaring a class abstract is useful",
+	    choices: [ "To prevent developers from further extending the class", "When it doesn’t make sense to have objects of that class", "When default implementations of some methods are not desirable", "To force developers to extend the class not to use its capabilities"],
+	    correctAnswer: 1 
+  }, {
+	    question: "A package is a collection of",
+	    choices: [ "Classes", "Interfaces", "Classes  and Interfaces", "Editing tools and interfaces"],
+	    correctAnswer: 3 
+  }, {
+	    question: "Polymorphism",
+	    choices: [ "Is not supported by Java", "Simplifies code maintenance", "Not simplifies code maintenance", "Refers to the ability of two or more objects belonging to different classes to respond to exactly the same message in different class-specific ways and simplifies code maintenance"],
+	    correctAnswer: 3 
+    
+    
+  }];
+  
+  
+ 
+  
+  
+  var questionCounter = 0; //Tracks question number
+  var selections = []; //Array containing user choices
+  var quiz = $('#quiz'); //Quiz div object
+  
+  // Display initial question
+  displayNext();
+  
+  // Click handler for the 'next' button
+  $('#next').on('click', function (e) {
+    e.preventDefault();
+    
+    // Suspend click listener during fade animation
+    if(quiz.is(':animated')) {        
+      return false;
+    }
+    choose();
+    
+    // If no user selection, progress is stopped
+   if (isNaN(selections[questionCounter])) 
+   {
+    //  alert('Please make a selection!');
+	   questionCounter++;
+	      displayNext();
+    } 
+   else {
+      questionCounter++;
+      displayNext();
+    }
+  });
+  
+  // Click handler for the 'prev' button
+  $('#prev').on('click', function (e) {
+    e.preventDefault();
+    
+    if(quiz.is(':animated')) {
+      return false;
+    }
+    choose();
+    questionCounter--;
+    displayNext();
+  });
+  
+  // Click handler for the 'Start Over' button
+  $('#start').on('click', function (e) {
+    e.preventDefault();
+    
+    if(quiz.is(':animated')) {
+      return false;
+    }
+    questionCounter = 0;
+    selections = [];
+    displayNext();
+    $('#start').hide();
+  });
+  
+  // Animates buttons on hover
+  $('.button').on('mouseenter', function () {
+    $(this).addClass('active');
+  });
+  $('.button').on('mouseleave', function () {
+    $(this).removeClass('active');
+  });
+  
+  // Creates and returns the div that contains the questions and 
+  // the answer selections
+  function createQuestionElement(index) {
+    var qElement = $('<div>', {
+      id: 'question'
+    });
+    
+    var header = $('<h2>Question ' + (index + 1) + ':</h2>');
+    qElement.append(header);
+    
+    var question = $('<p>').append(questions[index].question);
+    qElement.append(question);
+    
+    var radioButtons = createRadios(index);
+    qElement.append(radioButtons);
+    
+    return qElement;
+  }
+  
+  // Creates a list of the answer choices as radio inputs
+  function createRadios(index) {
+    var radioList = $('<ul>');
+    var item;
+    var input = '';
+    for (var i = 0; i < questions[index].choices.length; i++) {
+      item = $('<li>');
+      input = '<input type="radio" name="answer" value=' + i + ' />';
+      input += questions[index].choices[i];
+      item.append(input);
+      radioList.append(item);
+    }
+    return radioList;
+  }
+  
+  // Reads the user selection and pushes the value to an array
+  function choose() {
+    selections[questionCounter] = +$('input[name="answer"]:checked').val();
+  }
+  
+  // Displays next requested element
+  function displayNext() {
+    quiz.fadeOut(function() {
+      $('#question').remove();
+      
+      if(questionCounter < questions.length){
+        var nextQuestion = createQuestionElement(questionCounter);
+        quiz.append(nextQuestion).fadeIn();
+        if (!(isNaN(selections[questionCounter]))) {
+          $('input[value='+selections[questionCounter]+']').prop('checked', true);
+        }
+        
+        // Controls display of 'prev' button
+        if(questionCounter === 1){
+          $('#prev').show();
+        } else if(questionCounter === 0){
+          
+          $('#prev').hide();
+          $('#next').show();
+        }
+      }else {
+        var scoreElem = displayScore();
+        quiz.append(scoreElem).fadeIn();
+        $('#next').hide();
+        $('#prev').hide();
+        $('#start').show();
+      }
+    });
+  }
+  
+  // Computes score and returns a paragraph element to be displayed
+  function displayScore() {
+    var score = $('<p>',{id: 'question'});
+    
+    var numCorrect = 0;
+    for (var i = 0; i < selections.length; i++) {
+      if (selections[i] == questions[i].correctAnswer) {
+        numCorrect++;
+      }
+    }
+    
+    score.append('You got ' + numCorrect + ' questions out of ' +
+                 questions.length + ' right!!!');
+    return score;
+  }
+})();
+</script>
+
+<style>
+body {
+    font-family: Open Sans;
+}
+
+h1 {
+    text-align: center;
+}
+
+#title {
+    text-decoration: underline;
+}
+
+#quiz {
+    text-indent: 10px;
+    display:none;
+}
+
+.button {
+    border:4px solid;
+    border-radius:5px;
+    width: 100px;
+    padding-left:5px;
+    padding-right: 5px;
+    position: relative;
+    float:right;
+    background-color: #ff0000;
+    color: black;
+    margin: 0 2px 0 2px;
+}
+
+.button.active {
+    background-color: #F8F8FF;
+    color: #525252;
+}
+
+button {
+    position: relative;
+    float:right;
+}
+
+.button a {
+    text-decoration: none;
+    color: black;
+}
+
+
+
+#container {
+    width:100%;
+    margin:auto;
+    height:100%;
+    length:70%;
+    padding: 0 30px 40px 25px;
+    background-color: #8000ff;
+    background-size:cover;
+    border:4px solid #B0E0E6;
+    border-radius:50px;
+    color: #FFFFFF;
+    font-weight: bold;
+    box-shadow: 5px 5px 5px #888;
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#prev {
+    display:none;
+}
+
+#start {
+    display:none;
+    width: 90px;
+}
+
+</style>
+
+<script>
+
+function startTimer(duration, display) {
+    var timer = duration, minutes, seconds;
+    setInterval(function () {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = minutes + ":" + seconds;
+
+        if (--timer < 0) {
+        	 window.location = "https://duckdev.com";
+        }
+    }, 1000);
+}
+
+window.onload = function () {
+    var fiveMinutes = 60 * 5,
+        display = document.querySelector('#time');
+    startTimer(fiveMinutes, display);
+};
+
+</script>
+
+
+
